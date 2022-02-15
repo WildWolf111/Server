@@ -1,8 +1,11 @@
 package api
 
 import (
-	"github.com/gorilla/mux"
+	"net/http"
 
+	"StandartWebServer/store"
+
+	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
@@ -10,6 +13,7 @@ type API struct {
 	config *Config
 	logger *logrus.Logger
 	router *mux.Router
+	store  *store.Store
 }
 
 func New(config *Config) *API {
@@ -26,8 +30,14 @@ func (api *API) Start() error {
 
 		return err
 	}
-	api.logger.Info("starting api server at port:", api.config.BindAddr)
+	api.logger.Debug("starting api server at port:", api.config.BindAddr)
 
 	api.configureRouterFiled()
-	return nil
+
+	api.configureStoreField()
+	if err := api.configureStoreField(); err != nil {
+		return err
+	}
+	return http.ListenAndServe(api.config.BindAddr, api.router)
+
 }

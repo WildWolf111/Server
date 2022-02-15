@@ -1,2 +1,6 @@
+[web-server]
 bind_addr = ":8000" 
 logger_level = "debug"
+
+[store]
+database_uri = "host=localhost port=9090 user=postgres password=dem77xyz dbname=restapi sslmode=disable"
