@@ -2,9 +2,12 @@ package api
 
 import (
 	"StandartWebServer/store"
-	"net/http"
 
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	prefix string = "/api/v1"
 )
 
 //пытаемся откофигугрировать наш api instance
@@ -18,13 +21,17 @@ func (a *API) configureLoggerFiled() error {
 }
 
 func (a *API) configureRouterFiled() {
-	a.router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello! This is rest api!"))
-	})
+	a.router.HandleFunc(prefix+"/articles", a.GetAllArticles).Methods("GET")
+	a.router.HandleFunc(prefix+"/articles/{id}", a.GetArticleById).Methods("GET")
+	a.router.HandleFunc(prefix+"/articles/{id}", a.DeleteArticleById).Methods("DELETE")
+	a.router.HandleFunc(prefix+"/articles", a.PostArticle).Methods("POST")
+	a.router.HandleFunc(prefix+"/user/register", a.PostUserRegister).Methods("POST")
 }
+
 func (a *API) configureStoreField() error {
 	store := store.New(a.config.Store)
 	if err := store.Open(); err != nil {
+
 		return err
 	}
 	a.store = store

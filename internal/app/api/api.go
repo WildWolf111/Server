@@ -32,9 +32,8 @@ func (api *API) Start() error {
 	}
 	api.logger.Debug("starting api server at port:", api.config.BindAddr)
 
-	api.configureRouterFiled()
-
 	api.configureStoreField()
+
 	if err := api.configureStoreField(); err != nil {
 		return err
 	}
